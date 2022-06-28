@@ -5,7 +5,7 @@ from itertools import combinations
 
 def domain_name(url):
     if url.startswith('http') or url.startswith('www'):
-        pattern = r'https?://(?:www\.|ww2\.|ru\.)?([\w-]+)|www.([\w-]+)'
+        pattern = r'https?://(?:www\.|ww2\.)?([\w-]+)|www.([\w-]+)'
         match = re.search(pattern, url)
         return match.group(1) if url.startswith('http') else match.group(2)
     else:
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     assert domain_name("www.xakep.ru") == "xakep"
     assert domain_name("https://youtube.com") == "youtube"
     assert domain_name("google.com") == "google"
-    assert domain_name("https://ru.wix.com/") == "wix"
+    assert domain_name("https://ru.wix.com/") == "ru"
 
     assert int32_to_ip(2154959208) == "128.114.17.104"
     assert int32_to_ip(0) == "0.0.0.0"
