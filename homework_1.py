@@ -4,9 +4,12 @@ from itertools import combinations
 
 
 def domain_name(url):
-    pattern = r'https?://(?:www\.|ww2\.)?([\w-]+)|www.([\w-]+)'
-    match = re.search(pattern, url)
-    return match.group(1) if url.startswith('http') else match.group(2)
+    if url.startswith('http') or url.startswith('www'):
+        pattern = r'https?://(?:www\.|ww2\.|ru\.)?([\w-]+)|www.([\w-]+)'
+        match = re.search(pattern, url)
+        return match.group(1) if url.startswith('http') else match.group(2)
+    else:
+        return url.split(".")[0]
 
 
 def int32_to_ip(int32):
@@ -76,10 +79,15 @@ def multiply_primesL(primes):
 
 if __name__ == '__main__':
 
+    assert domain_name("http://github.com/carbonfive/raygun") == "github"
+    assert domain_name("http://www.zombie-bites.com") == "zombie-bites"
+    assert domain_name("https://www.cnet.com") == "cnet"
     assert domain_name("http://google.com") == "google"
     assert domain_name("http://google.co.jp") == "google"
     assert domain_name("www.xakep.ru") == "xakep"
     assert domain_name("https://youtube.com") == "youtube"
+    assert domain_name("google.com") == "google"
+    assert domain_name("https://ru.wix.com/") == "wix"
 
     assert int32_to_ip(2154959208) == "128.114.17.104"
     assert int32_to_ip(0) == "0.0.0.0"
