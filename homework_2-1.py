@@ -1,7 +1,7 @@
 from itertools import permutations
 
 
-def create_path():
+def create_path() -> list:
     return [[None, [], None], []]
 
 
@@ -21,7 +21,7 @@ def get_length_between_two_points(point_a: tuple, point_b: tuple) -> float:
     return ((point_b[0] - point_a[0]) ** 2 + (point_b[1] - point_a[1]) ** 2) ** 0.5
 
 
-def get_length_between_all_points(path: list):
+def get_length_between_all_points(path: list) -> None:
     n = len(path[0][1]) + 1
     for i in range(n):
         if i == 0:
@@ -35,7 +35,7 @@ def get_length_between_all_points(path: list):
             path[1].append(length_path + path[1][i-1])
 
 
-def get_combinations(path):
+def get_combinations(path: list) -> list:
     combination_list = []
     for i in permutations(path[0][1]):
         temp_path = create_path()
@@ -46,7 +46,7 @@ def get_combinations(path):
     return combination_list
 
 
-def calculate_min_path(path: list):
+def calculate_min_path(path: list) -> list:
     if len(path[0][1]) == 0:
         length_path = get_length_between_two_points(path[0][0], path[0][2])
         path[1].append(length_path)
@@ -66,7 +66,7 @@ def calculate_min_path(path: list):
         return min_path
 
 
-def display_path(path):
+def display_path(path: list) -> str:
     n = len(path[0][1]) + 1
     for i in range(n):
         if i == 0:
