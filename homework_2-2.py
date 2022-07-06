@@ -1,3 +1,5 @@
+import copy
+import itertools
 import random
 import tkinter.messagebox
 from tkinter import *
@@ -54,66 +56,92 @@ def click(row, col):
             game_run = False
 
         if game_run and cross_count < 50:
-            computer_step()
+            computer_move()
             win = wins(board, 1)
             if win:
                 tkinter.messagebox.showinfo("Info", "You win!")
                 game_run = False
 
 
-def check_line(a1, a2, a3, smb):
-    global game_run
-    if a1['text'] == smb and a2['text'] == smb and a3['text'] == smb:
-        a1['background'] = a2['background'] = a3['background'] = 'pink'
-        game_run = False
-
-
 def wins(state, player):
-    def win_list(num_list, number_for_win):
+    def get_rows(grid):
+        return [[c for c in r] for r in grid]
 
-        return [
-            num_list[num: num + number_for_win] for num in range(len(num_list) - 4)
-        ]
+    def get_cols(grid):
+        return zip(*grid)
 
-    horizontally = []
-    vertically = []
-    diagonally_1 = []
-    diagonally_2 = []
-    count = 0
-    count_2 = board_size - 1
+    def get_vert_lines(grid):
+        lst = []
+        for i in range(len(grid)):
+            tmp_lst = []
+            for j in range(len(grid)):
+                tmp_lst.append(grid[j][i])
+            lst.append(tmp_lst)
+        return lst
 
-    for w in range(board_size):
-        tmp1 = []
-        tmp2 = []
-        for z in range(board_size):
-            tmp1.append(state[w][z])
-            tmp2.append(state[z][w])
-        horizontally += win_list(tmp1, number_for_win)
-        vertically += win_list(tmp2, number_for_win)
-        diagonally_1.append(tmp1[count])
-        diagonally_2.append(tmp2[count_2])
-        count += 1
-        count_2 -= 1
+    def get_horiz_lines(grid):
+        lst = []
+        for i in range(len(grid)):
+            lst.append(grid[i])
+        return lst
 
-    diagonally_1 = win_list(diagonally_1, number_for_win)
-    diagonally_2 = win_list(diagonally_2, number_for_win)
+    def get_right_diagonals(grid):
+        b = [None] * (len(grid) - 1)
+        grid = [b[i:] + r + b[:i] for i, r in enumerate(get_rows(grid))]
+        return [[c for c in r if c is not None] for r in get_cols(grid)]
 
-    win_state = [*horizontally, *vertically, *diagonally_1, *diagonally_2]
+    def get_left_diagonals(grid):
+        b = [None] * (len(grid) - 1)
+        grid = [b[:i] + r + b[i:] for i, r in enumerate(get_rows(grid))]
+        return [[c for c in r if c is not None] for r in get_cols(grid)]
 
-    if [player] * number_for_win in win_state:
+    backward = get_right_diagonals(state)
+    forward = get_left_diagonals(state)
+    horizontal = get_horiz_lines(state)
+    vertical = get_vert_lines(state)
+
+    def win(lst: list):
+        it = False
+        for i in lst:
+            if len(i) > 4:
+                for item, group in itertools.groupby(i):
+                    l = len(list(group))
+                    if item == player and l >= 5 or item == player and l >= 5:
+                        it = True
+        return it
+
+    if win(backward) or win(forward) or win(horizontal) or win(vertical) is True:
         return True
     else:
         return False
 
 
-def computer_step():
+def computer_move():
+    count = 0
     while True:
-        row = random.randint(0, 9)
+        global board
+        can_loss = True
+        tmp_board = copy.deepcopy(board)
         col = random.randint(0, 9)
-        if field[row][col]['text'] == ' ':
-            field[row][col]['text'] = 'O'
-            board[row][col] = 1
-            break
+        row = random.randint(0, 9)
+        if tmp_board[row][col] == 0:
+            tmp_board[row][col] = 1
+            can_loss = wins(tmp_board, 1)
+            tmp_board = []
+        if can_loss is False:
+            if simple_move(row, col):
+                break
+        count += 1
+        if count > 300:
+            if simple_move(row, col):
+                break
+
+
+def simple_move(row, col):
+    if field[row][col]['text'] == ' ':
+        field[row][col]['text'] = 'O'
+        board[row][col] = 1
+        return True
 
 
 render_board_game()
