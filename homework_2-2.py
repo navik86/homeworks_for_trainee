@@ -21,6 +21,7 @@ root.resizable(False, False)
 def render_board_game():
     for row in range(board_size):
         line = []
+
         for col in range(board_size):
             button = Button(root, text=' ', width=4, height=2,
                             font=('Verdana', 14, 'bold'),
@@ -28,17 +29,21 @@ def render_board_game():
                             command=lambda row=row, col=col: click(row, col))
             button.grid(row=row, column=col, sticky='nsew')
             line.append(button)
+
         field.append(line)
+
     btn = Button(root, text='New game', command=new_game, font=('Courier', 14, 'bold'), background='#555')
     btn.grid(row=board_size + 1, column=0, columnspan=board_size, sticky='nsew')
 
 
 def new_game():
     global game_run, cross_count, board
+
     for row in range(10):
         for col in range(10):
             field[row][col]['text'] = ' '
             field[row][col]['background'] = 'lavender'
+
     game_run = True
     cross_count = 0
     board = [[0] * board_size for item in range(board_size)]
@@ -46,11 +51,13 @@ def new_game():
 
 def click(row, col):
     global game_run, cross_count
+
     if game_run and field[row][col]['text'] == ' ':
         field[row][col]['text'] = 'X'
         board[row][col] = -1
         cross_count += 1
         win = wins(board, -1)
+
         if win:
             tkinter.messagebox.showinfo("Info", "You lose!")
             game_run = False
@@ -58,12 +65,14 @@ def click(row, col):
         if game_run and cross_count < 50:
             computer_move()
             win = wins(board, 1)
+
             if win:
                 tkinter.messagebox.showinfo("Info", "You win!")
                 game_run = False
 
 
 def wins(state, player):
+
     def get_rows(grid):
         return [[c for c in r] for r in grid]
 
@@ -118,26 +127,31 @@ def wins(state, player):
 
 def computer_move():
     count = 0
+
     while True:
         global board
         can_loss = True
         tmp_board = copy.deepcopy(board)
         col = random.randint(0, 9)
         row = random.randint(0, 9)
+
         if tmp_board[row][col] == 0:
             tmp_board[row][col] = 1
             can_loss = wins(tmp_board, 1)
             tmp_board = []
+
         if can_loss is False:
             if simple_move(row, col):
                 break
         count += 1
+
         if count > 300:
             if simple_move(row, col):
                 break
 
 
 def simple_move(row, col):
+
     if field[row][col]['text'] == ' ':
         field[row][col]['text'] = 'O'
         board[row][col] = 1
