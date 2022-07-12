@@ -13,7 +13,7 @@ def repeater(call_count, start_sleep_time, factor, border_sleep_time):
                     t = start_sleep_time * factor ** i
                     if t >= border_sleep_time:
                         t = border_sleep_time
-                    print(f'Запуск номер {i}. Ожидание: {t} секунд.', end=' ')
+                    print(f'Запуск номер {i+1}. Ожидание: {t} секунд.', end=' ')
                     time.sleep(t)
                     func_result = foo()
                     print(f'Результат декорируемой функций = {func_result}.')
