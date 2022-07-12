@@ -9,7 +9,7 @@ def repeater(call_count, start_sleep_time, factor, border_sleep_time):
             else:
                 print(f'Кол-во запусков = {call_count}')
                 print('Начало работы')
-                for i in range(1, call_count+1):
+                for i in range(call_count):
                     t = start_sleep_time * factor ** i
                     if t >= border_sleep_time:
                         t = border_sleep_time
@@ -22,7 +22,7 @@ def repeater(call_count, start_sleep_time, factor, border_sleep_time):
     return outher
 
 
-@repeater(call_count=3, start_sleep_time=1, factor=2, border_sleep_time=100)
+@repeater(call_count=5, start_sleep_time=1, factor=2, border_sleep_time=100)
 def foo():
     return 'Y_LAB'
 
