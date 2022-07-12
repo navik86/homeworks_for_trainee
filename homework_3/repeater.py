@@ -7,12 +7,12 @@ def repeater(call_count, start_sleep_time, factor, border_sleep_time):
             if call_count == 0:
                 return print(f'Запусков не будет')
             else:
-                t = start_sleep_time
                 print(f'Кол-во запусков = {call_count}')
                 print('Начало работы')
                 for i in range(1, call_count+1):
-                    t *= (2 ** factor)
-                    t = t if t < border_sleep_time else border_sleep_time
+                    t = start_sleep_time * factor ** i
+                    if t >= border_sleep_time:
+                        t = border_sleep_time
                     print(f'Запуск номер {i}. Ожидание: {t} секунд.', end=' ')
                     time.sleep(t)
                     func_result = foo()
